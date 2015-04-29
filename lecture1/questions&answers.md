@@ -6,7 +6,7 @@
 
    Given a wall which computer or person are present, the person interact with the other end of the wall and give a judgement whether the other end is a person or a machine.
 
-3, What is Agent in AI?
+3. What is Agent in AI?
 
    An agent is an entity that perceives and acts.
 
@@ -20,10 +20,10 @@
 
 6. To design an intelligent taxi driver system, what kind of PEAS should be specified?
 
-    * Performance measure: safe, fast, comfortable
-    * Environment: roads, other traffic, pedestrians, customers
-    * Actuators: Steering wheel, accelerator, brake, signal, horn
-    * Sensors: cameras, sonar, speedometer, GPS, odometer, engine sensors, keyboard
+   * Performance measure: safe, fast, comfortable
+   * Environment: roads, other traffic, pedestrians, customers
+   * Actuators: Steering wheel, accelerator, brake, signal, horn
+   * Sensors: cameras, sonar, speedometer, GPS, odometer, engine sensors, keyboard
 
 7. What are the properties of environment in a taxi driver system?
 
@@ -33,6 +33,6 @@
 
    Simple reflex, model-based reflex, goal-based, utility-based.
 
-1.9 Who invented the term ‘Artificial Intelligence’? And when?
+9. Who invented the term ‘Artificial Intelligence’? And when?
 
    1956 Dartmouth meeting, invented by McCarthy.
