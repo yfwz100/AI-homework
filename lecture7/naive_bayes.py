@@ -4,6 +4,8 @@ from __future__ import division
 
 import logging
 
+logging.basicConfig(level=logging.DEBUG)
+
 __author__ = 'yfwz100'
 
 __all__ = ['PlainNaiveBayes', 'LaplaceNaiveBayes']
@@ -17,6 +19,7 @@ class PlainNaiveBayes(object):
         self._label_word_cnt = dict()
         self._word_cnt = dict()
         self._all_word_cnt = 0
+        self._vocabulary = set()
 
     def train(self, instances):
         for label, instance in instances:
@@ -31,6 +34,7 @@ class PlainNaiveBayes(object):
                 if label not in self._label_word_cnt:
                     self._label_word_cnt[label] = 0
                 self._label_word_cnt[label] += 1
+                self._vocabulary.add(word)
 
             if label not in self._label_cnt:
                 self._label_cnt[label] = 0
@@ -77,7 +81,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
     def get_word_prob(self, label, word):
         word = word.capitalize()
         numerator = self._laplace
-        denominator = self._laplace * len(self._word_cnt[label])
+        denominator = self._laplace * len(self._vocabulary)
         if word in self._word_cnt[label]:
             numerator += self._word_cnt[label][word]
             denominator += self._label_word_cnt[label]
@@ -99,7 +103,8 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
 def test(sentences):
     instances = map(lambda d: (d[0], [w.capitalize() for w in d[1].split(' ')]), sentences)
 
-    for clf in (PlainNaiveBayes(), LaplaceNaiveBayes(2)):
+    # for clf in [PlainNaiveBayes(), LaplaceNaiveBayes(2)]
+    for clf in [LaplaceNaiveBayes(2)]:
         clf.train(instances)
 
         print clf
@@ -112,13 +117,23 @@ def test(sentences):
 
 
 if __name__ == '__main__':
+    # test([
+    #     ('Spam', 'Offer is secret'),
+    #     ('Spam', 'Click secret link'),
+    #     ('Spam', 'Secret sports link'),
+    #     ('Ham', 'Play sports today'),
+    #     ('Ham', 'Went play sports'),
+    #     ('Ham', 'Secret sports event'),
+    #     ('Ham', 'Sport is today'),
+    #     ('Ham', 'Sport costs money')
+    # ])
     test([
         ('Spam', 'Offer is secret'),
-        ('Spam', 'Click secret link'),
-        ('Spam', 'Secret sports link'),
+        ('Spam', 'Click secret link below'),
+        ('Spam', 'Secret sports link here'),
         ('Ham', 'Play sports today'),
         ('Ham', 'Went play sports'),
-        ('Ham', 'Secret sports event'),
-        ('Ham', 'Sport is today'),
-        ('Ham', 'Sport costs money')
+        ('Ham', 'Secret sports event tomorrow'),
+        ('Ham', 'Sports are hold today'),
+        ('Ham', 'Sports cost much money')
     ])
