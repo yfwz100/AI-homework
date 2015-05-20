@@ -1,10 +1,11 @@
 # -*- coding: utf8 -*-
 
 from __future__ import division
+from fractions import Fraction as Frac
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 __author__ = 'yfwz100'
 
@@ -46,15 +47,15 @@ class PlainNaiveBayes(object):
     def get_word_prob(self, label, word):
         word = word.capitalize()
         if word in self._word_cnt[label]:
-            return self._word_cnt[label][word] / self._label_word_cnt[label]
+            return Frac(self._word_cnt[label][word], self._label_word_cnt[label])
         else:
-            return 0
+            return Frac(0)
 
     def get_label_prob(self, label):
         if label in self._label_cnt:
-            return self._label_cnt[label] / self._all_label_cnt
+            return Frac(self._label_cnt[label], self._all_label_cnt)
         else:
-            return 0
+            return Frac(0)
 
     def get_post_prob(self, instance, label=None):
         result = dict()
@@ -65,9 +66,9 @@ class PlainNaiveBayes(object):
         regularization = sum(result.itervalues())
         if label:
             logging.debug('%f/%f' % (result[label], regularization))
-            return result[label] / regularization
+            return Frac(result[label], regularization)
         else:
-            return {k: v / regularization for k, v in result.iteritems()}
+            return {k: Frac(v, regularization) for k, v in result.iteritems()}
 
     def __str__(self):
         return 'Plain Naive Bayes.'
@@ -85,7 +86,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
         if word in self._word_cnt[label]:
             numerator += self._word_cnt[label][word]
             denominator += self._label_word_cnt[label]
-        return numerator / denominator
+        return Frac(numerator, denominator)
 
     def get_label_prob(self, label):
         numerator = self._laplace
@@ -94,7 +95,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
             numerator += self._label_cnt[label]
             denominator += self._all_label_cnt
         logging.debug("Label Prob. = %f / %f" % (numerator, denominator))
-        return numerator / denominator
+        return Frac(numerator, denominator)
 
     def __str__(self):
         return "Laplace Naive Bayes (alpha=%d)" % self._laplace
@@ -108,12 +109,12 @@ def test(sentences):
         clf.train(instances)
 
         print clf
-        print 'P(Spam) = %f' % clf.get_label_prob('Spam')
-        print 'P("secret"|Spam) = %f' % clf.get_word_prob('Spam', 'secret')
-        print 'P("secret"|Ham) = %f' % clf.get_word_prob('Ham', 'secret')
-        print 'P(Spam|"Sports") = %f' % clf.get_post_prob(['sports'], 'Spam')
-        print 'P(Spam|"Secret is secret") = %f' % clf.get_post_prob("Secret is secret".split(' '), 'Spam')
-        print 'P(Spam|"Today is secret") = %f' % clf.get_post_prob("Today is secret".split(' '), 'Spam')
+        print 'P(Spam) = %s' % clf.get_label_prob('Spam')
+        print 'P("secret"|Spam) = %s' % clf.get_word_prob('Spam', 'secret')
+        print 'P("secret"|Ham) = %s' % clf.get_word_prob('Ham', 'secret')
+        print 'P(Spam|"Sports") = %s' % clf.get_post_prob(['sports'], 'Spam')
+        print 'P(Spam|"Secret is secret") = %s' % clf.get_post_prob("Secret is secret".split(' '), 'Spam')
+        print 'P(Spam|"Today is a secret day") = %s' % clf.get_post_prob("Today is a secret day".split(' '), 'Spam')
 
 
 if __name__ == '__main__':
