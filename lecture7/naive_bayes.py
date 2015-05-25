@@ -45,7 +45,7 @@ class PlainNaiveBayes(object):
         self._all_word_cnt = sum(self._label_word_cnt.itervalues())
 
     def get_word_prob(self, label, word):
-        word = word.capitalize()
+        word = word.upper()
         if word in self._word_cnt[label]:
             return Frac(self._word_cnt[label][word], self._label_word_cnt[label])
         else:
@@ -66,9 +66,9 @@ class PlainNaiveBayes(object):
         regularization = sum(result.itervalues())
         if label:
             logging.debug('%f/%f' % (result[label], regularization))
-            return Frac(result[label], regularization)
+            return result[label] / regularization
         else:
-            return {k: Frac(v, regularization) for k, v in result.iteritems()}
+            return {k: v / regularization for k, v in result.iteritems()}
 
     def __str__(self):
         return 'Plain Naive Bayes.'
@@ -80,7 +80,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
         self._laplace = laplace
 
     def get_word_prob(self, label, word):
-        word = word.capitalize()
+        word = word.upper()
         numerator = self._laplace
         denominator = self._laplace * len(self._vocabulary)
         if word in self._word_cnt[label]:
@@ -102,7 +102,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
 
 
 def test(sentences):
-    instances = map(lambda d: (d[0], [w.capitalize() for w in d[1].split(' ')]), sentences)
+    instances = map(lambda d: (d[0], [w.upper() for w in d[1].split(' ')]), sentences)
 
     # for clf in [PlainNaiveBayes(), LaplaceNaiveBayes(2)]
     for clf in [LaplaceNaiveBayes(2)]:
