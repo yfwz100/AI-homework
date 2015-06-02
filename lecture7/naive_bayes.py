@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-from __future__ import division
+
 from fractions import Fraction
 
 import logging
@@ -41,8 +41,8 @@ class PlainNaiveBayes(object):
                 self._label_cnt[label] = 0
             self._label_cnt[label] += 1
 
-        self._all_label_cnt = sum(self._label_cnt.itervalues())
-        self._all_word_cnt = sum(self._label_word_cnt.itervalues())
+        self._all_label_cnt = sum(self._label_cnt.values())
+        self._all_word_cnt = sum(self._label_word_cnt.values())
 
     def get_word_prob(self, label, word):
         word = word.upper()
@@ -59,16 +59,16 @@ class PlainNaiveBayes(object):
 
     def get_post_prob(self, instance, label=None):
         result = dict()
-        for label in self._word_cnt.iterkeys():
+        for label in self._word_cnt.keys():
             result[label] = self.get_label_prob(label)
             for word in instance:
                 result[label] *= self.get_word_prob(label, word)
-        regularization = sum(result.itervalues())
+        regularization = sum(result.values())
         if label:
             logging.debug('%f/%f' % (result[label], regularization))
             return result[label] / regularization
         else:
-            return {k: v / regularization for k, v in result.iteritems()}
+            return {k: v / regularization for k, v in result.items()}
 
     def __str__(self):
         return 'Plain Naive Bayes.'
@@ -102,19 +102,19 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
 
 
 def test(sentences):
-    instances = map(lambda d: (d[0], [w.upper() for w in d[1].split(' ')]), sentences)
+    instances = [(d[0], [w.upper() for w in d[1].split(' ')]) for d in sentences]
 
     # for clf in [PlainNaiveBayes(), LaplaceNaiveBayes(2)]
     for clf in [LaplaceNaiveBayes(2)]:
         clf.train(instances)
 
-        print clf
-        print 'P(Spam) = %s' % clf.get_label_prob('Spam')
-        print 'P("secret"|Spam) = %s' % clf.get_word_prob('Spam', 'secret')
-        print 'P("secret"|Ham) = %s' % clf.get_word_prob('Ham', 'secret')
-        print 'P(Spam|"Sports") = %s' % clf.get_post_prob(['sports'], 'Spam')
-        print 'P(Spam|"Secret is secret") = %s' % clf.get_post_prob("Secret is secret".split(' '), 'Spam')
-        print 'P(Spam|"Today is a secret day") = %s' % clf.get_post_prob("Today is a secret day".split(' '), 'Spam')
+        print(clf)
+        print('P(Spam) = %s' % clf.get_label_prob('Spam'))
+        print('P("secret"|Spam) = %s' % clf.get_word_prob('Spam', 'secret'))
+        print('P("secret"|Ham) = %s' % clf.get_word_prob('Ham', 'secret'))
+        print('P(Spam|"Sports") = %s' % clf.get_post_prob(['sports'], 'Spam'))
+        print('P(Spam|"Secret is secret") = %s' % clf.get_post_prob("Secret is secret".split(' '), 'Spam'))
+        print('P(Spam|"Today is a secret day") = %s' % clf.get_post_prob("Today is a secret day".split(' '), 'Spam'))
 
 
 if __name__ == '__main__':
