@@ -8,9 +8,12 @@ import random
 __author__ = 'yfwz100'
 
 
-def gaussian_cluster(data, k, tau=1e-3):
+def gaussian_cluster(data, k, init_center=None, tau=1e-3):
     old_center = None
-    center = random.sample([d for d in data], k)  # [d for d in data[-k:]]
+    if init_center is None:
+        center = random.sample([d for d in data], k)  # [d for d in data[-k:]]
+    else:
+        center = init_center
     pprint(center)
     sigma = [numpy.asmatrix(numpy.eye(data.shape[1]))] * k
     ez = numpy.ones((k, data.shape[0]))
