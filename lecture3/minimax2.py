@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function
+from __future__ import division, print_function
 
 __author__ = 'Wang Zhi'
 
@@ -8,12 +8,10 @@ import numpy as np
 import abc
 
 
-class Strategy(object):
+class Strategy(object, metaclass=abc.ABCMeta):
     """
     The base class for strategy used in the following methods.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     @abc.abstractproperty
     def choice(self):
@@ -54,7 +52,7 @@ def single_move(u_matrix, player):
             return "[choice: %s, utility: %s]" % (self.choice, self.utility)
 
     strategies = [
-        min(u_matrix.take(i, axis=player).take(player, axis=1)) for i in xrange(2)
+        min(u_matrix.take(i, axis=player).take(player, axis=1)) for i in range(2)
     ]
     return SMStrategy(np.argmax(strategies), max(strategies))
 
@@ -86,7 +84,7 @@ def prob_move(u_matrix, player):
             return "[choice: %.2f of choice 0, utility: %s]" % (self.choice, self.utility)
 
     param = [
-        u_matrix.take(i, axis=player).take(player, axis=1) for i in xrange(2)
+        u_matrix.take(i, axis=player).take(player, axis=1) for i in range(2)
     ]
 
     if param[0][0] - param[0][1] + param[1][1] - param[1][0] != 0:
