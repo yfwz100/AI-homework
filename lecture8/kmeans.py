@@ -19,7 +19,6 @@ def k_means(data, k, init_center=None, max_iter=10, dist=lambda x, y: np.dot((x 
     label = [
         np.argmax([dist(c, x) for c in center]) for x in data
     ]
-    print(label)
     while i < max_iter and \
             (old_center is None or not all(np.allclose(o, c, tau) for o, c in zip(old_center, center))):
         old_center = center
@@ -32,7 +31,7 @@ def k_means(data, k, init_center=None, max_iter=10, dist=lambda x, y: np.dot((x 
         ]
         # label the data.
         label = [
-            np.argmax([dist(c, x) for c in center]) for x in data
+            np.argmin([dist(c, x) for c in center]) for x in data
         ]
         # increment iteration.
         i += 1
