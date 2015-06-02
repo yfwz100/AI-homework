@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 from __future__ import division
-from fractions import Fraction as Frac
+from fractions import Fraction
 
 import logging
 
@@ -47,15 +47,15 @@ class PlainNaiveBayes(object):
     def get_word_prob(self, label, word):
         word = word.upper()
         if word in self._word_cnt[label]:
-            return Frac(self._word_cnt[label][word], self._label_word_cnt[label])
+            return Fraction(self._word_cnt[label][word], self._label_word_cnt[label])
         else:
-            return Frac(0)
+            return Fraction(0)
 
     def get_label_prob(self, label):
         if label in self._label_cnt:
-            return Frac(self._label_cnt[label], self._all_label_cnt)
+            return Fraction(self._label_cnt[label], self._all_label_cnt)
         else:
-            return Frac(0)
+            return Fraction(0)
 
     def get_post_prob(self, instance, label=None):
         result = dict()
@@ -86,7 +86,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
         if word in self._word_cnt[label]:
             numerator += self._word_cnt[label][word]
             denominator += self._label_word_cnt[label]
-        return Frac(numerator, denominator)
+        return Fraction(numerator, denominator)
 
     def get_label_prob(self, label):
         numerator = self._laplace
@@ -95,7 +95,7 @@ class LaplaceNaiveBayes(PlainNaiveBayes):
             numerator += self._label_cnt[label]
             denominator += self._all_label_cnt
         logging.debug("Label Prob. = %f / %f" % (numerator, denominator))
-        return Frac(numerator, denominator)
+        return Fraction(numerator, denominator)
 
     def __str__(self):
         return "Laplace Naive Bayes (alpha=%d)" % self._laplace
