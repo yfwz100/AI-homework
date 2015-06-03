@@ -1,15 +1,18 @@
 # -*- coding: utf8 -*-
 
-import numpy
-from numpy import linalg
 from pprint import pprint
 import random
+
+import numpy
+from numpy import linalg
+
 
 __author__ = 'yfwz100'
 
 
 def gaussian_cluster(data, k, init_center=None, tau=1e-3):
     old_center = None
+
     if init_center is None:
         center = random.sample([d for d in data], k)  # [d for d in data[-k:]]
     else:
@@ -21,9 +24,9 @@ def gaussian_cluster(data, k, init_center=None, tau=1e-3):
     def norm_pdf(x, c, sig):
         d = linalg.det(sig)
         if d == 0:
-            return 1 if numpy.allclose(x, c, 1e-6) else 0
+            return 1 if numpy.allclose(x, c, 1e-6) else 1e-9
         else:
-            return float(numpy.exp(-0.5 * (x - c) * (sig ** -1) * (x - c).T))
+            return float(numpy.exp(-0.5 * (x - c) * (sig ** -1) * (x - c).T + 1e-6))
 
     while old_center is None or not all(numpy.allclose(o, c, tau) for o, c in zip(old_center, center)):
         old_center = center
@@ -43,28 +46,3 @@ def gaussian_cluster(data, k, init_center=None, tau=1e-3):
         print("EZ:")
         pprint(ez)
     return center, [numpy.argmax(p) for p in zip(*ez)]
-
-
-if __name__ == '__main__':
-    def main():
-        data = [
-            [0.5],
-            [0.9],
-            [20],
-            [1],
-            [19],
-            [1.8],
-            [1.2],
-            [19.4],
-            [21],
-            [20.1],
-            [19.5],
-            [19],
-            [22],
-            [21.5]
-        ]
-        center, label = gaussian_cluster(numpy.matrix(data), 2)
-        print(center)
-        print('\n'.join(str(t) for t in zip(data, label)))
-
-    main()

@@ -39,29 +39,3 @@ def k_means(data, k, init_center=None, max_iter=10, dist=lambda x, y: np.dot((x 
         # increment iteration.
         i += 1
     return center, label
-
-
-if __name__ == '__main__':
-    def main():
-        data = [
-            [0.5],
-            [0.9],
-            [20],
-            [1],
-            [19],
-            [1.8],
-            [1.2],
-            [19.4],
-            [21],
-            [20.1],
-            [19.5],
-            [19],
-            [22],
-            [21.5],
-            [100]
-        ]
-        center, label = k_means(np.matrix(data), 5)
-        print(center)
-        print('\n'.join(str(t) for t in zip(data, label)))
-
-    main()
