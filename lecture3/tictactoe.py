@@ -54,6 +54,17 @@ def agent_utility(board, pos, mark, step=1):
         raise RuntimeError('Not possible.')
 
 
+def agent_position_range(board, mark):
+    """
+    Find the potential position to reduce the runtime overhead.
+
+    :param board: the board of the game.
+    :param mark: the mark of the player.
+    :return: the position list.
+    """
+    return np.transpose(np.nonzero(board == 0))
+
+
 def agent_choice(board, mark, step=1):
     """
     Get the choice of the agent given the board and mark.
@@ -63,6 +74,5 @@ def agent_choice(board, mark, step=1):
     :param step: number of steps to consider.
     :return: the position of next step.
     """
-    return max(
-        ((agent_utility(board, tuple(p), mark, step), tuple(p)) for p in np.transpose(np.nonzero(board == 0))),
-        key=lambda d: d[0])
+    return max(((agent_utility(board, tuple(p), mark, step), tuple(p)) for p in agent_position_range(board, mark)),
+               key=lambda d: d[0])
