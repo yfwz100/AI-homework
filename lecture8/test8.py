@@ -39,7 +39,7 @@ class Lecture8Tests(unittest.TestCase):
         center, label = k_means(np.matrix(data), 5)
         assert len(set(label)) == 5
 
-    def test_clustering(self):
+    def test_spectral(self):
         similarity_matrix = np.zeros((len(data), len(data)))
         for i, x in enumerate(data):
             for j, y in enumerate(data):
